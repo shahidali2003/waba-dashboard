@@ -1,4 +1,96 @@
-# Welcome to your Lovable project
+# WhatsApp Messenger Frontend
+
+A clean, production-quality React frontend for testing and demonstrating Twilio WhatsApp messaging capabilities.
+
+## Features
+
+- **Send Message**: Send WhatsApp messages through Twilio Sandbox with full validation and error handling
+- **Webhook Tester**: Simulate incoming WhatsApp webhooks for local development
+- **API Health Monitor**: Real-time backend connection status
+- **Dark Mode**: Built-in light/dark theme support
+- **Mobile Responsive**: Works seamlessly on all devices
+- **Type-Safe**: Full TypeScript implementation with Zod validation
+
+## Architecture
+
+- **Frontend**: React 18 + Vite + TypeScript
+- **UI**: Tailwind CSS + shadcn/ui components
+- **Validation**: Zod schemas with react-hook-form
+- **API Client**: Centralized fetch wrapper with timeout and error handling
+- **Routing**: React Router v6
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Backend API running (default: http://localhost:3000)
+
+### Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Copy environment file
+cp .env.example .env
+
+# Update VITE_API_BASE_URL if your backend runs on a different URL
+
+# Start development server
+npm run dev
+```
+
+The app will be available at http://localhost:8080
+
+### Environment Configuration
+
+Create a `.env` file with:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+## Backend Integration
+
+This frontend connects to a Twilio WhatsApp backend with these endpoints:
+
+- `POST /send-message` - Send WhatsApp messages
+- `POST /webhook` - Receive incoming messages (Twilio webhook)
+- `GET /swagger` - OpenAPI documentation
+
+## Project Structure
+
+```
+src/
+├── components/        # Reusable UI components
+│   ├── ui/           # shadcn/ui components
+│   ├── Layout.tsx    # Main layout with navigation
+│   ├── ApiHealthBadge.tsx
+│   └── CodeBlock.tsx
+├── pages/            # Route pages
+│   ├── SendMessage.tsx
+│   ├── WebhookTester.tsx
+│   └── Status.tsx
+├── lib/              # Utilities
+│   ├── api.ts        # API client
+│   ├── validation.ts # Zod schemas
+│   └── utils.ts      # Helpers
+└── App.tsx           # Root component
+```
+
+## Development Tips
+
+- Use the **Prefill Sample** button to quickly test forms
+- Check the **Status** page to verify backend connectivity
+- View **cURL examples** in each page for API testing
+- Monitor browser console for detailed error messages
+
+## Building for Production
+
+```bash
+npm run build
+```
 
 ## Project info
 
