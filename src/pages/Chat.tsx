@@ -145,10 +145,15 @@ export default function Chat() {
     toast.info('Simulated incoming message');
   };
 
+  const handleDeleteMessage = (messageId: string) => {
+    setMessages((prev) => prev.filter((msg) => msg.id !== messageId));
+    toast.success('Message deleted');
+  };
+
   return (
     <div className="h-[calc(100vh-12rem)] max-w-7xl mx-auto flex gap-4">
       {/* Sidebar */}
-      <Card className="w-80 p-6 flex flex-col gap-6 hidden lg:flex">
+      <Card className="w-80 p-6 flex flex-col gap-6 hidden lg:flex bg-card/50 backdrop-blur-sm border-border/50">
         <div>
           <h2 className="text-lg font-semibold mb-4">Connection Info</h2>
           
@@ -228,9 +233,9 @@ export default function Chat() {
       </Card>
 
       {/* Chat Area */}
-      <Card className="flex-1 flex flex-col">
+      <Card className="flex-1 flex flex-col bg-gradient-to-b from-card/50 to-card backdrop-blur-sm border-border/50">
         {/* Chat Header */}
-        <div className="p-4 border-b border-border flex items-center justify-between">
+        <div className="p-4 border-b border-border/50 flex items-center justify-between bg-card/80 backdrop-blur-sm">
           <div className="flex items-center gap-3">
             <div className="bg-primary/10 p-2 rounded-full">
               <User className="h-5 w-5 text-primary" />
@@ -255,7 +260,10 @@ export default function Chat() {
         {/* Messages Area */}
         <div
           ref={chatContainerRef}
-          className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20"
+          className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-muted/10 to-muted/30"
+          style={{
+            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, hsl(var(--muted) / 0.03) 10px, hsl(var(--muted) / 0.03) 20px)'
+          }}
         >
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
@@ -266,14 +274,18 @@ export default function Chat() {
             </div>
           ) : (
             messages.map((message) => (
-              <ChatMessage key={message.id} message={message} />
+              <ChatMessage 
+                key={message.id} 
+                message={message} 
+                onDelete={handleDeleteMessage}
+              />
             ))
           )}
           <div ref={messagesEndRef} />
         </div>
 
         {/* Input Area */}
-        <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border/50 bg-card/80 backdrop-blur-sm">
           <div className="flex gap-2">
             <Input
               value={inputValue}
