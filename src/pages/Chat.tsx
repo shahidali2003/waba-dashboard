@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Send, Phone, User, Loader2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
-import { sendMessage } from '@/lib/api';
+import { sendMessage, fetchMessages, BackendMessage } from '@/lib/api';
 import ChatMessage from '@/components/ChatMessage';
 
 interface Message {
@@ -35,6 +35,37 @@ export default function Chat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Poll messages from backend every 2 seconds
+  useEffect(() => {
+    const pollMessages = async () => {
+      try {
+        const backendMessages = await fetchMessages();
+        
+        // Convert backend messages to UI message format
+        const convertedMessages: Message[] = backendMessages.map((msg: BackendMessage, index: number) => ({
+          id: `${msg.time}-${index}`,
+          text: msg.body,
+          sender: msg.direction === 'outbound' ? 'user' : 'client',
+          timestamp: new Date(msg.time),
+          status: 'sent',
+        }));
+
+        setMessages(convertedMessages);
+      } catch (error) {
+        // Silently fail - don't show error toast on every poll failure
+        console.error('Failed to fetch messages:', error);
+      }
+    };
+
+    // Initial fetch
+    pollMessages();
+
+    // Poll every 2 seconds
+    const intervalId = setInterval(pollMessages, 2000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleSend = async () => {
     if (!inputValue.trim() || isSending) return;
@@ -175,11 +206,12 @@ export default function Chat() {
         <div className="mt-auto space-y-3">
           <Separator />
           <div className="bg-muted/50 p-3 rounded-lg text-xs text-muted-foreground space-y-2">
-            <p className="font-medium text-foreground">Testing Tips:</p>
+            <p className="font-medium text-foreground">Real-time Chat:</p>
             <ul className="space-y-1 list-disc list-inside">
-              <li>Messages sent here call the backend API</li>
-              <li>Use the button below to simulate incoming messages</li>
-              <li>Recipient must join Twilio Sandbox first</li>
+              <li>Messages auto-sync every 2 seconds</li>
+              <li>Send messages via backend API</li>
+              <li>Client replies appear automatically</li>
+              <li>Recipient must join Twilio Sandbox</li>
             </ul>
           </div>
           
@@ -190,7 +222,7 @@ export default function Chat() {
             className="w-full"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
-            Simulate Incoming
+            Simulate (Testing Only)
           </Button>
         </div>
       </Card>

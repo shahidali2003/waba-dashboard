@@ -134,4 +134,39 @@ export async function checkApiHealth(): Promise<boolean> {
   }
 }
 
+export interface BackendMessage {
+  from: string;
+  to: string;
+  body: string;
+  time: string;
+  direction: 'inbound' | 'outbound';
+}
+
+export async function fetchMessages(): Promise<BackendMessage[]> {
+  try {
+    const response = await fetchWithTimeout(
+      `${API_BASE_URL}/messages`,
+      {
+        method: 'GET',
+      },
+      5000
+    );
+
+    if (!response.ok) {
+      throw new ApiError('Failed to fetch messages', response.status);
+    }
+
+    const messages = await response.json();
+    return messages;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(
+      error instanceof Error ? error.message : 'Failed to fetch messages',
+      0
+    );
+  }
+}
+
 export { API_BASE_URL };
