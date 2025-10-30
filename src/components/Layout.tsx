@@ -49,6 +49,14 @@ export default function Layout({ children }: LayoutProps) {
                 Send Message
               </Link>
               <Link
+                to="/chat"
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  isActive('/chat') ? 'text-primary' : 'text-muted-foreground'
+                }`}
+              >
+                Chatboard
+              </Link>
+              <Link
                 to="/webhook-tester"
                 className={`text-sm font-medium transition-colors hover:text-primary ${
                   isActive('/webhook-tester') ? 'text-primary' : 'text-muted-foreground'
@@ -89,6 +97,14 @@ export default function Layout({ children }: LayoutProps) {
               }`}
             >
               Send Message
+            </Link>
+            <Link
+              to="/chat"
+              className={`text-sm font-medium whitespace-nowrap transition-colors hover:text-primary ${
+                isActive('/chat') ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              Chatboard
             </Link>
             <Link
               to="/webhook-tester"
